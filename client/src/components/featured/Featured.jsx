@@ -1,7 +1,28 @@
 import { InfoOutlined, PlayArrow } from "@mui/icons-material";
 import "./featured.scss";
+import axios from "axios";
+import {useEffect, useState} from "react";
 
 export default function Featured({ type }) {
+
+  const [content, setContent] = useState({});
+
+  useEffect(() => {
+    const getRandomContent = async () => {
+      try {
+        const res = await axios.get(`/movies/random?type=${type}`, {
+          headers: {
+            token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzY2YyOTg0NjY2MjJjZDEyMzY0NzNlOCIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY3NDU5NTkyOSwiZXhwIjoxNjc1MDI3OTI5fQ.liA9uKKlOyNSTWAMiBVbjAt8Vbx2ezRudhjD6GGYJ6g"
+          },
+        });
+        setContent(res.data[0]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getRandomContent();
+  }, [type]);
+
   return (
     <div className="featured">
       {type && (
@@ -26,19 +47,16 @@ export default function Featured({ type }) {
         </div>
       )}
       <img
-        src="https://on-desktop.com/wps/2020Girls___Beautyful_Girls_Three_girlfriends_watching_a_horror_movie_on_TV_144663_.jpg"
+        src={content.img}
         alt=""
       />
       <div className="info">
         <img
-          src="https://occ-0-1432-1433.1.nflxso.net/dnm/api/v6/LmEnxtiAuzezXBjYXPuDgfZ4zZQ/AAAABUZdeG1DrMstq-YKHZ-dA-cx2uQN_YbCYx7RABDk0y7F8ZK6nzgCz4bp5qJVgMizPbVpIvXrd4xMBQAuNe0xmuW2WjoeGMDn1cFO.webp?r=df1"
+          src={content.imgTitle}
           alt=""
         />
         <span className="desc">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae
-          adipisci repellendus eum quasi illo, velit numquam, maxime tempora
-          sint deleniti, aliquid qui? Facilis, adipisci! Ratione hic repudiandae
-          temporibus eum earum?
+        {content.desc}
         </span>
         <div className="buttons">
           <button className="play">
